@@ -1,0 +1,29 @@
+{
+    "name": "gigablah/silex-view",
+    "description": "Engine-agnostic view component for Silex",
+    "keywords": ["silex", "view", "template", "render"],
+    "homepage": "https://github.com/gigablah/silex-view",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Chris Heng",
+            "email": "bigblah@gmail.com"
+        }
+    ],
+    "require": {
+        "silex/silex": "~1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~3.7",
+        "mustache/mustache": "~2.4",
+        "twig/twig": "~1.0",
+        "smarty/smarty": "~3.1",
+        "aura/view": "~1.2"
+    },
+    "autoload": {
+        "psr-0": {
+            "Gigablah\\Silex\\View": ["src/"]
+        }
+    }
+}

@@ -1,0 +1,1 @@
+<h1><?php throw new \Exception(); ?></h1>

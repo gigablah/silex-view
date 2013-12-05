@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="./vendor/autoload.php" colors="true">
+    <testsuites>
+        <testsuite name="silex-view">
+            <directory suffix="Test.php">./src/Gigablah/Silex/View/Tests</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory>./src/Gigablah/Silex/View</directory>
+            <exclude>
+                <directory>./src/Gigablah/Silex/View/Tests</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>
