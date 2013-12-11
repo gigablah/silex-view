@@ -30,6 +30,22 @@ class ViewFactory
     }
 
     /**
+     * Sets the global context.
+     *
+     * @param mixed $context The global context
+     *
+     * @return ViewFactory
+     */
+    public function share($context)
+    {
+        foreach ((array) $context as $key => $value) {
+            $this->sharedBag->set($key, $value);
+        }
+
+        return $this;
+    }
+
+    /**
      * Returns the shared data container.
      *
      * @return DataBag

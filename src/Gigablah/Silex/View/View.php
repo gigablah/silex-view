@@ -133,9 +133,9 @@ class View extends \ArrayObject implements ViewInterface
     /**
      * {@inheritDoc}
      */
-    public function share($globals)
+    public function share($context)
     {
-        foreach ((array) $globals as $key => $value) {
+        foreach ((array) $context as $key => $value) {
             $this->sharedBag->set($key, $value);
         }
 

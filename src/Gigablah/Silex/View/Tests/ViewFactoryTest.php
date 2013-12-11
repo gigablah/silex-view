@@ -22,6 +22,15 @@ class ViewFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Gigablah\\Silex\\View\\Bag\\DataBag', $this->factory->getSharedBag());
     }
 
+    public function testShare()
+    {
+        $this->assertNull($this->factory->getSharedBag()->get('foo'));
+
+        $this->factory->share(array('foo' => 'bar'));
+
+        $this->assertEquals('bar', $this->factory->getSharedBag()->get('foo'));
+    }
+
     public function testGetExceptionBag()
     {
         $this->assertInstanceOf('Gigablah\\Silex\\View\\Bag\\ExceptionBag', $this->factory->getExceptionBag());

@@ -38,6 +38,6 @@ class TemplateResolver implements TemplateResolverInterface
             $template = strtolower($request->attributes->get('_route'));
         }
 
-        return $template.($this->type ? '.'.$this->type : '');
+        return $template.(!pathinfo($template, PATHINFO_EXTENSION) && $this->type ? '.'.$this->type : '');
     }
 }

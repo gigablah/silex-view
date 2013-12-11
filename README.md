@@ -25,39 +25,64 @@ Just register the service provider and optionally pass in some defaults.
 
 ```php
 $app->register(new Gigablah\Silex\View\ViewServiceProvider(), array(
-    'view.globals' => array(
-        'foo' => 'bar'
-    ),
+    'view.globals' => array('foo' => 'bar'),
     'view.default_engine' => 'mustache'
 ));
 ```
 
-The provider registers two listeners. The `ViewListener` intercepts the output from your controllers and wraps it with a `View` object. The output now forms your view context. The `RenderListener` listens in to the response event and renders your views into a string with the appropriate engine.
+The provider registers the `ArrayToViewListener` which intercepts the output from your controllers and wraps it with a `View` object. For it to work, you have to return an array of data from your controller function.
 
-Creating Views
---------------
+Views
+-----
 
 Normally you do not need to instantiate any view entities on your own; the listener will convert your controller output. If you wish to do it manually, the syntax is as follows:
 
 ```php
-$app['view']->create($template = '/path/to/template', $context = array('foo' => 'bar'));
+$view = $app['view']->create($template = '/path/to/template', $context = array('foo' => 'bar'));
 ```
+
+Views can be rendered by calling the `render()` function, or casting to string:
+
+```php
+$output = $view->render();
+$output = (string) $view;
+```
+
+Again, you should not need to render your views manually since they will be handled by the `Response` object.
+
+View Context
+------------
+
+The view entity is simply an instance of `ArrayObject`, so you can use regular array notation to set the context, along with convenience functions like `with()`:
+
+```php
+$view['foo'] = 'bar';
+$view->with(array('foo' => 'bar'));
+```
+
+To insert into the global context, use `share()`:
+
+```php
+$view->share(array('foo' => 'bar'));
+```
+
+You can initialize the global context by overriding `view.globals`.
 
 Resolving Templates
 -------------------
 
-How does the listener know which template to use? By default it reads the `_route` attribute from the request entity in lowercase. Some examples:
+How does the listener know which template to use? By default it reads the `_route` attribute from the request entity in lowercase, and appends the extension based on the value of `view.default_engine`. Some examples:
 
 ```php
-$app->get('/foobar', function () {}); // get_foobar
-$app->get('/', function () {}); // get_
-$app->match('/', function () {}); // _
+$app->get('/foobar', function () {}); // get_foobar.mustache
+$app->get('/', function () {}); // get_.mustache
+$app->match('/', function () {}); // _.mustache
 ```
 
 Since you probably want more descriptive template names, you can use named routes:
 
 ```php
-$app->match('/', function () {})->bind('home'); // home
+$app->match('/', function () {})->bind('home'); // home.mustache
 ```
 
 You can also set the `_template` attribute in the request, or as part of the controller output:
@@ -87,25 +112,6 @@ This library does not handle any actual view rendering; that task is delegated t
 * Token replacement using strtr()
 
 There is a special `DelegatingEngine` which acts as a registry for multiple different engines, selecting the appropriate one based on the template file extension.
-
-View Context
-------------
-
-The view entity is simply an instance of `ArrayObject`, so you can use regular array notation to set the context, along with convenience functions like `with()`:
-
-```php
-$view['foo'] = 'bar';
-
-$view->with(array('foo' => 'bar'));
-```
-
-To insert into the global context, use `share()`:
-
-```php
-$view->share(array('foo' => 'bar'));
-```
-
-You can initialize the global context by overriding `view.globals`.
 
 Composite Views
 ---------------
@@ -140,9 +146,13 @@ To access the last thrown exception, or return all of them:
 
 ```php
 $exception = $app['view']->getExceptionBag()->pop();
-
 $exceptions = $app['view']->getExceptionBag()->all();
 ```
+
+More Examples
+-------------
+
+You can view a code sample of various usage scenarios in the [demo application][7].
 
 License
 -------
@@ -155,3 +165,4 @@ Released under the MIT license. See the LICENSE file for details.
 [4]: http://www.smarty.net
 [5]: http://twig.sensiolabs.org
 [6]: http://github.com/auraphp/Aura.View
+[7]: http://github.com/gigablah/silex-view/blob/master/demo/app.php

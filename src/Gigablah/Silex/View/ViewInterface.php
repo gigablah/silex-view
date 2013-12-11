@@ -77,11 +77,11 @@ interface ViewInterface
     /**
      * Apply global values across all views.
      *
-     * @param mixed $globals
+     * @param mixed $context
      *
      * @return ViewInterface
      */
-    public function share($globals);
+    public function share($context);
 
     /**
      * Dump all global values.

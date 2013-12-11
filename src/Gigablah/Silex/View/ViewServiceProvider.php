@@ -12,10 +12,10 @@ use Gigablah\Silex\View\Engine\TwigEngine;
 use Gigablah\Silex\View\Engine\LazyEngineResolver;
 use Gigablah\Silex\View\Template\TemplateResolver;
 use Gigablah\Silex\View\Logger\ViewLogger;
-use Gigablah\Silex\View\EventListener\ViewListener;
-use Gigablah\Silex\View\EventListener\RenderListener;
+use Gigablah\Silex\View\EventListener\ArrayToViewListener;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * ViewServiceProvider registers the view factory for wrapping responses with views.
@@ -39,10 +39,10 @@ class ViewServiceProvider implements ServiceProviderInterface
 
         $app['view.default_engine'] = 'html';
 
-        $app['view.required_formats'] = array('html');
+        $app['view.listener_priority'] = -20;
 
         $app['view'] = $app->share(function ($app) {
-            $factory = $app['debug'] ? $app['view.factory.debug'] : $app['view.factory'];
+            $factory = $app['debug'] && $app['logger'] ? $app['view.factory.debug'] : $app['view.factory'];
             $factory->getSharedBag()->add($app['view.globals']);
 
             return $factory;
@@ -92,6 +92,10 @@ class ViewServiceProvider implements ServiceProviderInterface
             return new TemplateResolver($app['view.default_engine']);
         });
 
+        $app['view.array_to_view_listener'] = $app->share(function ($app) {
+            return new ArrayToViewListener($app['view'], $app['view.template_resolver']);
+        });
+
         $app['view.logger'] = $app->share(function ($app) {
             $stopwatch = isset($app['debug.stopwatch']) ? $app['debug.stopwatch'] : null;
 
@@ -101,7 +105,6 @@ class ViewServiceProvider implements ServiceProviderInterface
 
     public function boot(Application $app)
     {
-        $app['dispatcher']->addSubscriber(new ViewListener($app['view'], $app['view.template_resolver'], $app['view.required_formats']));
-        $app['dispatcher']->addSubscriber(new RenderListener($app['view']));
+        $app['dispatcher']->addListener(KernelEvents::VIEW, array($app['view.array_to_view_listener'], 'onKernelView'), $app['view.listener_priority']);
     }
 }

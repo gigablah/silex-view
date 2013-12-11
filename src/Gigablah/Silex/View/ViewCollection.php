@@ -96,11 +96,11 @@ class ViewCollection extends \ArrayObject implements ViewInterface
     /**
      * {@inheritDoc}
      */
-    public function share($globals)
+    public function share($context)
     {
         $view = reset($this);
 
-        return $view->share($globals);
+        return $view->share($context);
     }
 
     /**
