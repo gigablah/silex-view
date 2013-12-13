@@ -1,6 +1,8 @@
 ViewServiceProvider
 ===================
 
+[![Build Status](https://travis-ci.org/gigablah/silex-view.png?branch=master)](https://travis-ci.org/gigablah/silex-view) [![Coverage Status](https://coveralls.io/repos/gigablah/silex-view/badge.png)](https://coveralls.io/r/gigablah/silex-view)
+
 The ViewServiceProvider gives engine-agnostic templating capabilities to your [Silex][1] application.
 
 Installation
@@ -108,10 +110,20 @@ This library does not handle any actual view rendering; that task is delegated t
 * [Smarty][4]
 * [Twig][5]
 * [Aura.View][6]
+* [Plates][7]
 * Raw PHP
 * Token replacement using strtr()
 
-There is a special `DelegatingEngine` which acts as a registry for multiple different engines, selecting the appropriate one based on the template file extension.
+There is a special `DelegatingEngine` which acts as a registry for multiple different engines, selecting the appropriate one based on the template file extension. Since Aura.View, Plates and Raw PHP all use the same default file extension (.php), you will need to manually configure the extension mapping as follows:
+
+```php
+$app->register(new Gigablah\Silex\View\ViewServiceProvider(), array(
+    'view.default_engine' => 'php',
+    'view.engines' => array(
+        'php' => 'view.engine.plates'
+    )
+));
+```
 
 Composite Views
 ---------------
@@ -122,10 +134,17 @@ Views can be nested inside another:
 $view->nest($app['view']->create('foobar.html'), 'section');
 ```
 
-This is simply alternate syntax for:
+For a single view, it is equivalent to:
 
 ```php
 $view['section'] = $app['view']->create('foobar.html');
+```
+
+However, the difference lies in nesting multiple views in the same location. Doing this will place the child views adjacent to each other rather than overwriting:
+
+```php
+$view->nest($app['view']->create('foobar.html'), 'section');
+$view->nest($app['view']->create('foobar.html'), 'section'); // foobar.html is now repeated twice
 ```
 
 What's more, you can mix and match different engines:
@@ -152,7 +171,7 @@ $exceptions = $app['view']->getExceptionBag()->all();
 More Examples
 -------------
 
-You can view a code sample of various usage scenarios in the [demo application][7].
+You can view a code sample of various usage scenarios in the [demo application][8].
 
 License
 -------
@@ -165,4 +184,5 @@ Released under the MIT license. See the LICENSE file for details.
 [4]: http://www.smarty.net
 [5]: http://twig.sensiolabs.org
 [6]: http://github.com/auraphp/Aura.View
-[7]: http://github.com/gigablah/silex-view/blob/master/demo/app.php
+[7]: http://platesphp.com
+[8]: http://github.com/gigablah/silex-view/blob/master/demo/app.php

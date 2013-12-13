@@ -16,10 +16,16 @@
     },
     "require-dev": {
         "phpunit/phpunit": "~3.7",
+        "satooshi/php-coveralls": "dev-master",
         "mustache/mustache": "~2.4",
         "twig/twig": "~1.0",
         "smarty/smarty": "~3.1",
-        "aura/view": "~1.2"
+        "aura/view": "~1.2",
+        "league/plates": "~1.0"
+    },
+    "suggest": {
+        "mustache/silex-provider": "Mustache templating engine integration",
+        "rych/silex-plates-provider": "Plates templating engine integration"
     },
     "autoload": {
         "psr-0": {

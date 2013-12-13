@@ -6,6 +6,7 @@ use Gigablah\Silex\View\Engine\DelegatingEngine;
 use Gigablah\Silex\View\Engine\StringEngine;
 use Gigablah\Silex\View\Engine\PhpEngine;
 use Gigablah\Silex\View\Engine\AuraEngine;
+use Gigablah\Silex\View\Engine\PlatesEngine;
 use Gigablah\Silex\View\Engine\MustacheEngine;
 use Gigablah\Silex\View\Engine\SmartyEngine;
 use Gigablah\Silex\View\Engine\TwigEngine;
@@ -70,6 +71,10 @@ class ViewServiceProvider implements ServiceProviderInterface
 
         $app['view.engine.aura'] = $app->share(function ($app) {
             return new AuraEngine($app['aura.template']);
+        });
+
+        $app['view.engine.plates'] = $app->share(function ($app) {
+            return new PlatesEngine($app['plates']);
         });
 
         $app['view.engine.mustache'] = $app->share(function ($app) {
