@@ -98,7 +98,7 @@ class ViewCollection extends \ArrayObject implements ViewInterface
      */
     public function share($context)
     {
-        $view = reset($this);
+        $view = parent::offsetGet(0);
 
         return $view->share($context);
     }
@@ -108,7 +108,7 @@ class ViewCollection extends \ArrayObject implements ViewInterface
      */
     public function globals()
     {
-        $view = reset($this);
+        $view = parent::offsetGet(0);
 
         return $view->globals();
     }
