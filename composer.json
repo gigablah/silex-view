@@ -16,6 +16,7 @@
         "silex/silex": "~1.0"
     },
     "require-dev": {
+        "monolog/monolog": ">=1.0.0",
         "phpunit/phpunit": "~3.7",
         "satooshi/php-coveralls": "dev-master",
         "mustache/mustache": "~2.4",

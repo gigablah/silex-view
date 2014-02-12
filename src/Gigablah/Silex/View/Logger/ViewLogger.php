@@ -68,9 +68,9 @@ class ViewLogger implements ViewLoggerInterface
             sprintf(
                 '%s%s rendered%s%s',
                 get_class($view),
-                null !== $template = $view->getTemplate() ? sprintf(' "%s"', $template) : '',
-                null !== $engine = $view->getEngine() ? sprintf(' with %s', get_class($engine)) : '',
-                null !== $time ? sprintf(' in %sms', $time) : ''
+                (null !== $template = $view->getTemplate()) ? sprintf(' "%s"', $template) : '',
+                (null !== $engine = $view->getEngine()) ? sprintf(' with %s', get_class($engine)) : '',
+                (null !== $time) ? sprintf(' in %sms', $time) : ''
             )
         );
     }

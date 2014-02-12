@@ -6,6 +6,10 @@ $app = new Silex\Application();
 
 $app['debug'] = true;
 
+$app->register(new Silex\Provider\MonologServiceProvider(), array(
+    'monolog.handler' => new Monolog\Handler\SyslogHandler('silex-view')
+));
+
 $app['mustache'] = $app->share(function ($app) {
     return new \Mustache_Engine(array(
         'loader' => new \Mustache_Loader_FilesystemLoader(__DIR__)
